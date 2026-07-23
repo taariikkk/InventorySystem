@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "NQ4CMxcYMVixsvTaESYSocHVkwxU7vIMMYPQb5GHylE=",
+  "Source": "InventorySystem.WebAPI",
+  "BasePath": "_content/InventorySystem.WebAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

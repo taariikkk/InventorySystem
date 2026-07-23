@@ -1,0 +1,12 @@
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/bin/Debug/net8.0/InventorySystem.Domain.deps.json
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/bin/Debug/net8.0/InventorySystem.Domain.dll
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/bin/Debug/net8.0/InventorySystem.Domain.pdb
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/InventorySystem.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/InventorySystem.Domain.AssemblyInfoInputs.cache
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/InventorySystem.Domain.AssemblyInfo.cs
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/InventorySystem.Domain.csproj.CoreCompileInputs.cache
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/InventorySystem.Domain.sourcelink.json
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/InventorySystem.Domain.dll
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/refint/InventorySystem.Domain.dll
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/InventorySystem.Domain.pdb
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Domain/obj/Debug/net8.0/ref/InventorySystem.Domain.dll

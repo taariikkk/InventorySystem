@@ -1,0 +1,16 @@
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/bin/Debug/net8.0/InventorySystem.Application.deps.json
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/bin/Debug/net8.0/InventorySystem.Application.dll
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/bin/Debug/net8.0/InventorySystem.Application.pdb
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/bin/Debug/net8.0/InventorySystem.Domain.dll
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/bin/Debug/net8.0/InventorySystem.Domain.pdb
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.csproj.AssemblyReference.cache
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.AssemblyInfoInputs.cache
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.AssemblyInfo.cs
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.csproj.CoreCompileInputs.cache
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.sourcelink.json
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/Inventor.494326BD.Up2Date
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.dll
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/refint/InventorySystem.Application.dll
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/InventorySystem.Application.pdb
+/home/tarik/Desktop/InventorySystem/server/InventorySystem.Application/obj/Debug/net8.0/ref/InventorySystem.Application.dll
