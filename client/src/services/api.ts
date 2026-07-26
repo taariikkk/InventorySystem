@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:5153/api', // port .NET API-ja
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5153/api', // port .NET API-ja
     headers: {
         'Content-Type': 'application/json',
     },
