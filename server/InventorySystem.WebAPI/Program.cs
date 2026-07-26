@@ -9,6 +9,17 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Omogućavanje CORS-a za naš React frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // React razvojni port
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // 1. Database Configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -84,6 +95,25 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// AUTOMATSKO SEEDOVANJE BAZE PODATAKA PRI POKRETANJU
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        var passwordHasher = services.GetRequiredService<IPasswordHasher>();
+        
+        // Pozivamo naš seeder asinhrono i čekamo da završi
+        await DatabaseSeeder.SeedAsync(context, passwordHasher);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Došlo je do greške tokom seedovanja baze podataka.");
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -91,6 +121,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowReactApp");
 
 // VRLO VAŽNO: UseAuthentication mora ići prije UseAuthorization
 app.UseAuthentication(); 
