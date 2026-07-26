@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/InventorySystem.WebAPI.props" />
-</Project>
