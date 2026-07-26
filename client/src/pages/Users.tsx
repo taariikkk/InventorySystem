@@ -3,8 +3,11 @@ import { Navigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../hooks/useAuth';
 import type { UserResponse, CreateUserRequest } from '../types';
-import { Plus, Trash2, UserPlus, Loader2, Shield, Mail, Lock, User as UserIcon } from 'lucide-react';
+import { Plus, Trash2, UserPlus, Loader2, Shield, Mail, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+
+const inputWithIconClasses =
+  'block w-full rounded-xl border-0 bg-slate-50/80 py-2.5 pl-11 pr-3.5 text-sm text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 transition placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600/30';
 
 export const Users: React.FC = () => {
   const { user: currentUser } = useAuth();
@@ -98,11 +101,14 @@ export const Users: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-800">Upravljanje korisnicima</h1>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Upravljanje korisnicima</h1>
+          <p className="text-sm text-slate-500">Dodajte članove tima i dodijelite im odgovarajuće uloge.</p>
+        </div>
         <button
           onClick={openModal}
-          className="flex items-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 transition"
+          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600/40 focus-visible:ring-offset-2"
         >
           <Plus className="h-4 w-4" />
           <span>Novi korisnik</span>
@@ -110,63 +116,72 @@ export const Users: React.FC = () => {
       </div>
 
       {/* TABELA KORISNIKA */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-sm border border-slate-100">
+      <div className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm shadow-slate-900/[0.03]">
         {loading ? (
-          <div className="flex justify-center p-12">
-            <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+          <div className="flex flex-col items-center justify-center gap-3 p-16">
+            <Loader2 className="h-7 w-7 animate-spin text-indigo-600" />
+            <p className="text-sm font-medium text-slate-400">Učitavanje korisnika...</p>
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-red-600">{error}</div>
+          <div className="flex items-center justify-center gap-2.5 p-12 text-sm font-medium text-rose-600">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full border-collapse text-left">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-sm font-semibold text-slate-600">
-                  <th className="p-4">Korisnik</th>
-                  <th className="p-4">Email</th>
-                  <th className="p-4">Uloga</th>
-                  <th className="p-4">Datum Kreiranja</th>
-                  <th className="p-4 text-right">Akcije</th>
+                <tr className="border-b border-slate-100 bg-slate-50/80">
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Korisnik</th>
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Email</th>
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Uloga</th>
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Datum kreiranja</th>
+                  <th className="px-6 py-3.5 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Akcije</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                 {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-50/50 transition">
-                    <td className="p-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-slate-100 p-2 rounded-full text-slate-600">
+                  <tr key={u.id} className="transition-colors hover:bg-slate-50/70">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 ring-1 ring-inset ring-slate-200/60">
                           <UserIcon className="h-4 w-4" />
                         </div>
                         <span className="font-semibold text-slate-900">{u.username}</span>
                       </div>
                     </td>
-                    <td className="p-4 text-slate-500">{u.email}</td>
-                    <td className="p-4">
-                      <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                        u.role === 'Admin' 
-                          ? 'bg-red-50 text-red-700' 
+                    <td className="px-6 py-4 text-slate-500">{u.email}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${
+                        u.role === 'Admin'
+                          ? 'bg-indigo-50 text-indigo-700 ring-indigo-100'
                           : u.role === 'Manager'
-                          ? 'bg-amber-50 text-amber-700'
-                          : 'bg-blue-50 text-blue-700'
+                          ? 'bg-amber-50 text-amber-700 ring-amber-100'
+                          : 'bg-slate-100 text-slate-600 ring-slate-200/70'
                       }`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${
+                          u.role === 'Admin' ? 'bg-indigo-500' : u.role === 'Manager' ? 'bg-amber-500' : 'bg-slate-400'
+                        }`} />
                         {u.role}
                       </span>
                     </td>
-                    <td className="p-4 text-slate-400">
+                    <td className="px-6 py-4 text-slate-400 tabular-nums">
                       {new Date(u.createdAt).toLocaleDateString('bs-BA')}
                     </td>
-                    <td className="p-4 text-right">
+                    <td className="px-6 py-4 text-right">
                       {/* Sprečavamo admina da obriše sam sebe na klijentu */}
                       {u.email !== currentUser?.email ? (
                         <button
                           onClick={() => handleDeleteUser(u.id)}
-                          className="inline-flex p-1.5 hover:bg-slate-100 rounded text-slate-400 hover:text-red-600 transition"
+                          className="inline-flex rounded-lg p-2 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
                           title="Ukloni korisnika"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       ) : (
-                        <span className="text-xs text-slate-300 italic px-2">Ti (Ti si prijavljen)</span>
+                        <span className="inline-flex rounded-full bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-400 ring-1 ring-inset ring-slate-200/60">
+                          Trenutni korisnik
+                        </span>
                       )}
                     </td>
                   </tr>
@@ -179,100 +194,108 @@ export const Users: React.FC = () => {
 
       {/* MODAL ZA KREIRANJE KORISNIKA */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center space-x-2">
-              <UserPlus className="h-5 w-5 text-indigo-600" />
-              <span>Dodaj novog člana tima</span>
-            </h2>
-
-            {formError && (
-              <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                {formError}
+        <div className="animate-overlay fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-md">
+          <div className="animate-panel w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-2xl shadow-slate-950/20">
+            <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
+              <div className="rounded-lg bg-indigo-50 p-2 text-indigo-600 ring-1 ring-inset ring-indigo-100">
+                <UserPlus className="h-4 w-4" />
               </div>
-            )}
+              <div className="leading-tight">
+                <h2 className="text-[17px] font-semibold tracking-tight text-slate-900">Dodaj novog člana tima</h2>
+                <p className="mt-0.5 text-xs text-slate-400">Kreirajte pristupne podatke i dodijelite ulogu.</p>
+              </div>
+            </div>
 
-            <form onSubmit={handleCreateUser} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Korisničko ime</label>
-                <div className="relative mt-1 rounded-md shadow-sm">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <UserIcon className="h-5 w-5 text-slate-400" />
+            <form onSubmit={handleCreateUser}>
+              <div className="space-y-4 px-6 py-5">
+                {formError && (
+                  <div className="flex items-start gap-2.5 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-3 text-sm text-rose-700">
+                    <AlertCircle className="mt-px h-4 w-4 shrink-0" />
+                    <span className="leading-relaxed">{formError}</span>
                   </div>
-                  <input
-                    type="text"
-                    required
-                    value={formUsername}
-                    onChange={(e) => setFormUsername(e.target.value)}
-                    className="block w-full rounded-lg border-0 py-2.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-                    placeholder="npr. haris"
-                  />
+                )}
+
+                <div>
+                  <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Korisničko ime</label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                      <UserIcon className="h-[18px] w-[18px] text-slate-400" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={formUsername}
+                      onChange={(e) => setFormUsername(e.target.value)}
+                      className={inputWithIconClasses}
+                      placeholder="npr. haris"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Email adresa</label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                      <Mail className="h-[18px] w-[18px] text-slate-400" />
+                    </div>
+                    <input
+                      type="email"
+                      required
+                      value={formEmail}
+                      onChange={(e) => setFormEmail(e.target.value)}
+                      className={inputWithIconClasses}
+                      placeholder="haris@test.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Privremena lozinka</label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                      <Lock className="h-[18px] w-[18px] text-slate-400" />
+                    </div>
+                    <input
+                      type="password"
+                      required
+                      value={formPassword}
+                      onChange={(e) => setFormPassword(e.target.value)}
+                      className={inputWithIconClasses}
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Uloga (Role)</label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                      <Shield className="h-[18px] w-[18px] text-slate-400" />
+                    </div>
+                    <select
+                      value={formRole}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormRole(e.target.value as 'Admin' | 'Manager' | 'Worker')}
+                      className={inputWithIconClasses}
+                    >
+                      <option value="Worker">Worker (Samo pregled i prodaja)</option>
+                      <option value="Manager">Manager (Upravljanje zalihama)</option>
+                      <option value="Admin">Admin (Sva prava)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Email adresa</label>
-                <div className="relative mt-1 rounded-md shadow-sm">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <Mail className="h-5 w-5 text-slate-400" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    value={formEmail}
-                    onChange={(e) => setFormEmail(e.target.value)}
-                    className="block w-full rounded-lg border-0 py-2.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-                    placeholder="haris@test.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Privremena lozinka</label>
-                <div className="relative mt-1 rounded-md shadow-sm">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <Lock className="h-5 w-5 text-slate-400" />
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    value={formPassword}
-                    onChange={(e) => setFormPassword(e.target.value)}
-                    className="block w-full rounded-lg border-0 py-2.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Uloga (Role)</label>
-                <div className="relative mt-1 rounded-md shadow-sm">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <Shield className="h-5 w-5 text-slate-400" />
-                  </div>
-                  <select
-                    value={formRole}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormRole(e.target.value as 'Admin' | 'Manager' | 'Worker')}
-                    className="block w-full rounded-md border-0 py-2.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-                  >
-                    <option value="Worker">Worker (Samo pregled i prodaja)</option>
-                    <option value="Manager">Manager (Upravljanje zalihama)</option>
-                    <option value="Admin">Admin (Sva prava)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+              <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50"
                 >
                   Odustani
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 transition"
+                  className="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500"
                 >
                   Kreiraj korisnika
                 </button>

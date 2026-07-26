@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useAuth } from '../hooks/useAuth';
-import { Lock, Mail, Loader2 } from 'lucide-react';
+import { Lock, Mail, Loader2, Boxes, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 import axios from 'axios';
 
 // 1. Definišemo Zod šemu validacije (Pravila za unos)
@@ -54,93 +54,108 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-md">
-        
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 font-sans sm:px-6 lg:px-8">
+      <div className="w-full max-w-[420px]">
+
         {/* Naslov */}
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-slate-900">
+        <div className="flex flex-col items-center text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-950 shadow-lg shadow-slate-950/10">
+            <Boxes className="h-6 w-6 text-white" />
+          </div>
+          <h2 className="mt-6 text-2xl font-semibold tracking-tight text-slate-900">
             Prijavite se u sistem
           </h2>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm leading-relaxed text-slate-500">
             Unesite svoje pristupne podatke za upravljanje zalihama
           </p>
         </div>
 
-        {/* Prikaz API greške sa backenda */}
-        {apiError && (
-          <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
-            {apiError}
-          </div>
-        )}
+        <div className="mt-8 rounded-2xl border border-slate-200/70 bg-white p-7 shadow-sm shadow-slate-900/[0.03]">
 
-        {/* Forma */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4 rounded-md">
-            
-            {/* Email Unos */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Email adresa</label>
-              <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Mail className="h-5 w-5 text-slate-400" />
+          {/* Prikaz API greške sa backenda */}
+          {apiError && (
+            <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-3 text-sm text-rose-700">
+              <AlertCircle className="mt-px h-4 w-4 shrink-0" />
+              <span className="leading-relaxed">{apiError}</span>
+            </div>
+          )}
+
+          {/* Forma */}
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-5">
+
+              {/* Email Unos */}
+              <div>
+                <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Email adresa</label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                    <Mail className="h-[18px] w-[18px] text-slate-400" />
+                  </div>
+                  <input
+                    type="email"
+                    {...register('email')}
+                    className={`block w-full rounded-xl border-0 bg-slate-50/80 py-2.5 pl-11 pr-3.5 text-sm text-slate-900 shadow-sm ring-1 ring-inset transition placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 ${
+                      errors.email
+                        ? 'ring-rose-300 focus:ring-rose-500/40'
+                        : 'ring-slate-200 focus:ring-indigo-600/30'
+                    }`}
+                    placeholder="admin@test.com"
+                  />
                 </div>
-                <input
-                  type="email"
-                  {...register('email')}
-                  className={`block w-full rounded-md border-0 py-2.5 pl-10 text-slate-900 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
-                    errors.email 
-                      ? 'ring-red-300 focus:ring-red-500' 
-                      : 'ring-slate-300 focus:ring-indigo-600'
-                  }`}
-                  placeholder="admin@test.com"
-                />
+                {errors.email && (
+                  <p className="mt-1.5 text-xs font-medium text-rose-600">{errors.email.message}</p>
+                )}
               </div>
-              {errors.email && (
-                <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
-              )}
+
+              {/* Password Unos */}
+              <div>
+                <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Lozinka</label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                    <Lock className="h-[18px] w-[18px] text-slate-400" />
+                  </div>
+                  <input
+                    type="password"
+                    {...register('password')}
+                    className={`block w-full rounded-xl border-0 bg-slate-50/80 py-2.5 pl-11 pr-3.5 text-sm text-slate-900 shadow-sm ring-1 ring-inset transition placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 ${
+                      errors.password
+                        ? 'ring-rose-300 focus:ring-rose-500/40'
+                        : 'ring-slate-200 focus:ring-indigo-600/30'
+                    }`}
+                    placeholder="••••••••"
+                  />
+                </div>
+                {errors.password && (
+                  <p className="mt-1.5 text-xs font-medium text-rose-600">{errors.password.message}</p>
+                )}
+              </div>
+
             </div>
 
-            {/* Password Unos */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Lozinka</label>
-              <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="password"
-                  {...register('password')}
-                  className={`block w-full rounded-md border-0 py-2.5 pl-10 text-slate-900 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
-                    errors.password 
-                      ? 'ring-red-300 focus:ring-red-500' 
-                      : 'ring-slate-300 focus:ring-indigo-600'
-                  }`}
-                  placeholder="••••••••"
-                />
-              </div>
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
-              )}
+            {/* Dugme za slanje */}
+            <div className="pt-1">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-indigo-400 disabled:shadow-none"
+              >
+                {submitting ? (
+                  <Loader2 className="h-[18px] w-[18px] animate-spin" />
+                ) : (
+                  <>
+                    <span>Prijavi se</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </>
+                )}
+              </button>
             </div>
+          </form>
+        </div>
 
-          </div>
-
-          {/* Dugme za slanje */}
-          <div>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-400 transition"
-            >
-              {submitting ? (
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              ) : (
-                'Prijavi se'
-              )}
-            </button>
-          </div>
-        </form>
+        <p className="mt-6 flex items-center justify-center gap-1.5 text-xs text-slate-400">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          <span>Zaštićen pristup — samo za ovlaštene korisnike</span>
+        </p>
 
       </div>
     </div>

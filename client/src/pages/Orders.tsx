@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import api from '../services/api';
 import type { OrderResponse, PagedResponse, ProductResponse, OrderRequest } from '../types';
-import { Plus, ShoppingCart, ChevronLeft, ChevronRight, Loader2, Trash2 } from 'lucide-react';
+import { Plus, ShoppingCart, ChevronLeft, ChevronRight, Loader2, Trash2, AlertCircle, Inbox } from 'lucide-react';
 import axios from 'axios';
 
 interface DraftItem {
@@ -10,6 +10,9 @@ interface DraftItem {
   quantity: number;
   price: number;
 }
+
+const fieldClasses =
+  'block w-full rounded-xl border-0 bg-white py-2.5 px-3.5 text-sm text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/30';
 
 export const Orders: React.FC = () => {
   const [orders, setOrders] = useState<OrderResponse[]>([]);
@@ -165,11 +168,14 @@ export const Orders: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-800">Narudžbe i Prodaja</h1>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Narudžbe i prodaja</h1>
+          <p className="text-sm text-slate-500">Evidentirajte prodaju i pregledajte istoriju transakcija.</p>
+        </div>
         <button
           onClick={openCreateOrderModal}
-          className="flex items-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 transition"
+          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600/40 focus-visible:ring-offset-2"
         >
           <Plus className="h-4 w-4" />
           <span>Nova narudžba</span>
@@ -177,45 +183,61 @@ export const Orders: React.FC = () => {
       </div>
 
       {/* TABELA NARUDŽBI */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-sm border border-slate-100">
+      <div className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm shadow-slate-900/[0.03]">
         {loading ? (
-          <div className="flex justify-center p-12">
-            <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+          <div className="flex flex-col items-center justify-center gap-3 p-16">
+            <Loader2 className="h-7 w-7 animate-spin text-indigo-600" />
+            <p className="text-sm font-medium text-slate-400">Učitavanje narudžbi...</p>
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-red-600">{error}</div>
+          <div className="flex items-center justify-center gap-2.5 p-12 text-sm font-medium text-rose-600">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
         ) : orders.length === 0 ? (
-          <div className="p-8 text-center text-slate-500">Nema evidentiranih narudžbi.</div>
+          <div className="flex flex-col items-center justify-center gap-3 p-16 text-center">
+            <div className="rounded-xl bg-slate-100 p-3 text-slate-400 ring-1 ring-inset ring-slate-200/60">
+              <Inbox className="h-5 w-5" />
+            </div>
+            <p className="text-sm font-medium text-slate-500">Nema evidentiranih narudžbi.</p>
+          </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full border-collapse text-left">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-sm font-semibold text-slate-600">
-                  <th className="p-4">Broj Narudžbe</th>
-                  <th className="p-4">Datum</th>
-                  <th className="p-4">Kupljeni Artikli</th>
-                  <th className="p-4">Ukupan Iznos</th>
-                  <th className="p-4">Status</th>
+                <tr className="border-b border-slate-100 bg-slate-50/80">
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Broj narudžbe</th>
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Datum</th>
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Kupljeni artikli</th>
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Ukupan iznos</th>
+                  <th className="px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                 {orders.map((order) => (
-                  <tr key={order.id} className="hover:bg-slate-50/50 transition">
-                    <td className="p-4 font-mono font-semibold text-indigo-600">{order.orderNumber}</td>
-                    <td className="p-4 text-slate-500">{new Date(order.orderDate).toLocaleDateString('bs-BA')}</td>
-                    <td className="p-4">
-                      <div className="space-y-1">
+                  <tr key={order.id} className="transition-colors hover:bg-slate-50/70">
+                    <td className="px-6 py-4">
+                      <span className="rounded-md bg-indigo-50 px-2 py-1 font-mono text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
+                        {order.orderNumber}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-500 tabular-nums">{new Date(order.orderDate).toLocaleDateString('bs-BA')}</td>
+                    <td className="px-6 py-4">
+                      <div className="space-y-1.5">
                         {order.items.map((item, idx) => (
-                          <div key={idx} className="text-xs">
-                            <span className="font-semibold text-slate-900">{item.productName}</span> x {item.quantity} 
-                            <span className="text-slate-400"> ({Number(item.unitPrice).toFixed(2)} KM)</span>
+                          <div key={idx} className="flex items-center gap-1.5 text-xs">
+                            <span className="font-semibold text-slate-900">{item.productName}</span>
+                            <span className="text-slate-400">×</span>
+                            <span className="font-medium text-slate-600 tabular-nums">{item.quantity}</span>
+                            <span className="text-slate-400 tabular-nums">({Number(item.unitPrice).toFixed(2)} KM)</span>
                           </div>
                         ))}
                       </div>
                     </td>
-                    <td className="p-4 font-bold text-slate-900">{Number(order.totalAmount).toFixed(2)} KM</td>
-                    <td className="p-4">
-                      <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+                    <td className="px-6 py-4 font-semibold text-slate-900 tabular-nums">{Number(order.totalAmount).toFixed(2)} KM</td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                         Završena
                       </span>
                     </td>
@@ -227,24 +249,26 @@ export const Orders: React.FC = () => {
         )}
 
         {/* PAGINACIJA */}
-        <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-4">
-          <span className="text-sm text-slate-500">
-            Ukupno: <strong className="text-slate-800">{totalCount}</strong> narudžbi | Stranica <strong className="text-slate-800">{page}</strong> od <strong className="text-slate-800">{totalPages}</strong>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
+          <span className="text-xs text-slate-500">
+            Ukupno <strong className="font-semibold text-slate-800">{totalCount}</strong> narudžbi
+            <span className="mx-2 text-slate-300">|</span>
+            Stranica <strong className="font-semibold text-slate-800">{page}</strong> od <strong className="font-semibold text-slate-800">{totalPages}</strong>
           </span>
-          <div className="flex space-x-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page === 1}
-              className="p-2 border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-50 transition"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white p-2 text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-200"
             >
-              <ChevronLeft className="h-5 w-5 text-slate-600" />
+              <ChevronLeft className="h-[18px] w-[18px]" />
             </button>
             <button
               onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={page === totalPages}
-              className="p-2 border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-50 transition"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white p-2 text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-200"
             >
-              <ChevronRight className="h-5 w-5 text-slate-600" />
+              <ChevronRight className="h-[18px] w-[18px]" />
             </button>
           </div>
         </div>
@@ -252,114 +276,134 @@ export const Orders: React.FC = () => {
 
       {/* MODAL ZA KREIRANJE NARUDŽBE */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl flex flex-col max-h-[90vh]">
-            <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center space-x-2">
-              <ShoppingCart className="h-5 w-5 text-indigo-600" />
-              <span>Nova narudžba</span>
-            </h2>
-
-            {formError && (
-              <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                {formError}
+        <div className="animate-overlay fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-md">
+          <div className="animate-panel flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-2xl shadow-slate-950/20">
+            <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
+              <div className="rounded-lg bg-indigo-50 p-2 text-indigo-600 ring-1 ring-inset ring-indigo-100">
+                <ShoppingCart className="h-4 w-4" />
               </div>
-            )}
+              <div className="leading-tight">
+                <h2 className="text-[17px] font-semibold tracking-tight text-slate-900">Nova narudžba</h2>
+                <p className="mt-0.5 text-xs text-slate-400">Dodajte artikle u korpu i završite prodaju.</p>
+              </div>
+            </div>
 
             {productsLoading ? (
-              <div className="flex justify-center p-8">
+              <div className="flex flex-col items-center justify-center gap-3 p-16">
                 <Loader2 className="h-6 w-6 animate-spin text-indigo-600" />
+                <p className="text-sm font-medium text-slate-400">Učitavanje proizvoda...</p>
               </div>
             ) : (
-              <div className="space-y-6 overflow-y-auto flex-1 pr-1">
-                
-                {/* DIO ZA DODAVANJE ARTIKLA U KORPU */}
-                <div className="grid grid-cols-1 gap-4 rounded-lg bg-slate-50 p-4 sm:grid-cols-3 items-end">
-                  <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-slate-700">Izaberi proizvod</label>
-                    <select
-                      value={selectedProductId}
-                      onChange={(e) => setSelectedProductId(e.target.value !== '' ? Number(e.target.value) : '')}
-                      className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">-- Izaberite proizvod --</option>
-                      {availableProducts.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} - ({Number(p.price).toFixed(2)} KM) - [Na stanju: {p.stockQuantity}]
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex space-x-2">
-                    <div className="w-24">
-                      <label className="block text-sm font-medium text-slate-700">Količina</label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={selectedQuantity}
-                        onChange={(e) => setSelectedQuantity(Math.max(1, Number(e.target.value)))}
-                        className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleAddToDraft}
-                      className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition self-end"
-                    >
-                      Dodaj
-                    </button>
-                  </div>
-                </div>
+              <>
+                <div className="flex-1 space-y-6 overflow-y-auto px-6 py-5">
 
-                {/* PRIVREMENA KORPA (KORPA ZA KUPOVINU) */}
-                <div className="space-y-3">
-                  <h3 className="font-bold text-slate-700 text-sm">Stavke u korpi ({draftItems.length})</h3>
-                  {draftItems.length === 0 ? (
-                    <p className="text-sm text-slate-400 italic">Korpa je prazna. Dodajte proizvode iznad.</p>
-                  ) : (
-                    <div className="border border-slate-100 rounded-lg overflow-hidden">
-                      <table className="w-full text-left text-sm">
-                        <thead className="bg-slate-50 font-semibold text-slate-600">
-                          <tr>
-                            <th className="p-3">Proizvod</th>
-                            <th className="p-3">Količina</th>
-                            <th className="p-3">Cijena</th>
-                            <th className="p-3 text-right">Ukloni</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-slate-700">
-                          {draftItems.map((item, index) => (
-                            <tr key={index} className="hover:bg-slate-50/50">
-                              <td className="p-3 font-semibold">{item.productName}</td>
-                              <td className="p-3">{item.quantity} kom</td>
-                              <td className="p-3 font-semibold text-indigo-600">{(item.price * item.quantity).toFixed(2)} KM</td>
-                              <td className="p-3 text-right">
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveFromDraft(index)}
-                                  className="text-red-500 hover:text-red-700 p-1 rounded hover:bg-slate-100 transition"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  {formError && (
+                    <div className="flex items-start gap-2.5 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-3 text-sm text-rose-700">
+                      <AlertCircle className="mt-px h-4 w-4 shrink-0" />
+                      <span className="leading-relaxed">{formError}</span>
                     </div>
                   )}
+
+                  {/* DIO ZA DODAVANJE ARTIKLA U KORPU */}
+                  <div className="grid grid-cols-1 items-end gap-4 rounded-xl border border-slate-200/70 bg-slate-50/70 p-4 sm:grid-cols-3">
+                    <div className="sm:col-span-2">
+                      <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Izaberi proizvod</label>
+                      <select
+                        value={selectedProductId}
+                        onChange={(e) => setSelectedProductId(e.target.value !== '' ? Number(e.target.value) : '')}
+                        className={fieldClasses}
+                      >
+                        <option value="">-- Izaberite proizvod --</option>
+                        {availableProducts.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name} - ({Number(p.price).toFixed(2)} KM) - [Na stanju: {p.stockQuantity}]
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-end gap-2">
+                      <div className="w-24 shrink-0">
+                        <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Količina</label>
+                        <input
+                          type="number"
+                          min="1"
+                          value={selectedQuantity}
+                          onChange={(e) => setSelectedQuantity(Math.max(1, Number(e.target.value)))}
+                          className={`${fieldClasses} tabular-nums`}
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleAddToDraft}
+                        className="flex-1 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-slate-800"
+                      >
+                        Dodaj
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* PRIVREMENA KORPA (KORPA ZA KUPOVINU) */}
+                  <div className="space-y-3">
+                    <h3 className="flex items-center gap-2 text-[13px] font-semibold text-slate-700">
+                      Stavke u korpi
+                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-500 tabular-nums ring-1 ring-inset ring-slate-200/60">
+                        {draftItems.length}
+                      </span>
+                    </h3>
+                    {draftItems.length === 0 ? (
+                      <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/50 px-4 py-8 text-center">
+                        <p className="text-sm text-slate-400">Korpa je prazna. Dodajte proizvode iznad.</p>
+                      </div>
+                    ) : (
+                      <div className="overflow-hidden rounded-xl border border-slate-200/70">
+                        <table className="w-full text-left text-sm">
+                          <thead className="bg-slate-50/80">
+                            <tr>
+                              <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Proizvod</th>
+                              <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Količina</th>
+                              <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Cijena</th>
+                              <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Ukloni</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 text-slate-700">
+                            {draftItems.map((item, index) => (
+                              <tr key={index} className="transition-colors hover:bg-slate-50/70">
+                                <td className="px-4 py-3 font-semibold text-slate-900">{item.productName}</td>
+                                <td className="px-4 py-3 tabular-nums">{item.quantity} kom</td>
+                                <td className="px-4 py-3 font-semibold text-slate-900 tabular-nums">{(item.price * item.quantity).toFixed(2)} KM</td>
+                                <td className="px-4 py-3 text-right">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveFromDraft(index)}
+                                    className="inline-flex rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+
                 </div>
 
                 {/* UKUPAN IZNOS I AKCIJE */}
-                <div className="border-t border-slate-100 pt-4 flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
                   <div>
-                    <p className="text-xs text-slate-400">Ukupan iznos narudžbe</p>
-                    <p className="text-2xl font-bold text-slate-900">{calculateDraftTotal().toFixed(2)} KM</p>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-slate-400">Ukupan iznos</p>
+                    <p className="mt-0.5 text-xl font-semibold tracking-tight text-slate-900 tabular-nums">
+                      {calculateDraftTotal().toFixed(2)}
+                      <span className="ml-1 text-sm font-medium text-slate-400">KM</span>
+                    </p>
                   </div>
-                  <div className="flex space-x-3">
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setIsModalOpen(false)}
-                      className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50"
                     >
                       Odustani
                     </button>
@@ -367,14 +411,13 @@ export const Orders: React.FC = () => {
                       type="button"
                       onClick={handleSubmitOrder}
                       disabled={draftItems.length === 0}
-                      className="rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition disabled:bg-indigo-400"
+                      className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-indigo-400 disabled:shadow-none"
                     >
                       Završi narudžbu
                     </button>
                   </div>
                 </div>
-
-              </div>
+              </>
             )}
           </div>
         </div>
