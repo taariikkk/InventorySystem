@@ -92,3 +92,19 @@ export interface RegisterRequest {
     username: string;
     role: 'Admin' | 'Manager' | 'Worker';
 }
+
+// 6. Upravljanje korisnicima (Admin-only)
+export interface UserResponse {
+  id: number;
+  username: string;
+  email: string;
+  role: 'Admin' | 'Manager' | 'Worker';
+  createdAt: string;
+}
+
+export interface CreateUserRequest {
+  username: string;
+  email: string;
+  password: string;
+  role: number; // 0 = Admin, 1 = Manager, 2 = Worker
+}

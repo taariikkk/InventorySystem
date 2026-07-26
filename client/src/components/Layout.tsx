@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { LayoutDashboard, Package, ShoppingCart, LogOut, User } from 'lucide-react';
-
+import { LayoutDashboard, Package, ShoppingCart, LogOut, User, Users as UsersIcon } from 'lucide-react'; // Dodaj UsersIcon na kraj
 export const Layout: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -35,6 +34,18 @@ export const Layout: React.FC = () => {
             <ShoppingCart className="h-5 w-5" />
             <span>Narudžbe</span>
           </Link>
+          <Link to="/orders" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition">
+            <ShoppingCart className="h-5 w-5" />
+            <span>Narudžbe</span>
+          </Link>
+
+          {/* OVO JE NOVI DIO: Link za korisnike se prikazuje SAMO Adminu */}
+          {user?.role === 'Admin' && (
+            <Link to="/users" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition text-red-400 hover:text-red-300">
+              <UsersIcon className="h-5 w-5" />
+              <span className="font-semibold">Korisnici (Admin)</span>
+            </Link>
+          )}
         </nav>
 
         {/* Korisnički profil na dnu sidebara */}
