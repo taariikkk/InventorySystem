@@ -21,7 +21,10 @@ export const Layout: React.FC = () => {
 
   // Zatvaramo drawer svaki put kada korisnik promijeni stranicu
   useEffect(() => {
-    setIsSidebarOpen(false);
+    const timer = setTimeout(() => {
+      setIsSidebarOpen(false);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [location.pathname]);
 
   // Sprečavamo skrolanje pozadine dok je mobilni meni otvoren
