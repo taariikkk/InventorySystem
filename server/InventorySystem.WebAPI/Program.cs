@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // React razvojni port
+        policy.AllowAnyOrigin() // Dopušta i localhost, i  glavni Vercel, i sve privremene Vercel linkove
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
