@@ -168,14 +168,14 @@ export const Orders: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Narudžbe i prodaja</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Narudžbe i prodaja</h1>
           <p className="text-sm text-slate-500">Evidentirajte prodaju i pregledajte istoriju transakcija.</p>
         </div>
         <button
           onClick={openCreateOrderModal}
-          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600/40 focus-visible:ring-offset-2"
+          className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600/40 focus-visible:ring-offset-2 sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           <span>Nova narudžba</span>
@@ -202,7 +202,46 @@ export const Orders: React.FC = () => {
             <p className="text-sm font-medium text-slate-500">Nema evidentiranih narudžbi.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* MOBILNI PRIKAZ: kartice narudžbi */}
+          <div className="divide-y divide-slate-100 md:hidden">
+            {orders.map((order) => (
+              <div key={order.id} className="space-y-3 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="rounded-md bg-indigo-50 px-2 py-1 font-mono text-[11px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
+                    {order.orderNumber}
+                  </span>
+                  <span className="text-xs text-slate-500 tabular-nums">
+                    {new Date(order.orderDate).toLocaleDateString('bs-BA')}
+                  </span>
+                </div>
+
+                <div className="space-y-1.5 rounded-xl bg-slate-50/70 p-3">
+                  {order.items.map((item, idx) => (
+                    <div key={idx} className="flex items-baseline justify-between gap-2 text-xs">
+                      <span className="min-w-0 truncate font-semibold text-slate-900">{item.productName}</span>
+                      <span className="shrink-0 text-slate-500 tabular-nums">
+                        {item.quantity} × {Number(item.unitPrice).toFixed(2)} KM
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Završena
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900 tabular-nums">
+                    {Number(order.totalAmount).toFixed(2)} KM
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* DESKTOP / TABLET PRIKAZ: klasična tabela */}
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/80">
@@ -246,10 +285,11 @@ export const Orders: React.FC = () => {
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         {/* PAGINACIJA */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/60 px-4 py-4 sm:px-6">
           <span className="text-xs text-slate-500">
             Ukupno <strong className="font-semibold text-slate-800">{totalCount}</strong> narudžbi
             <span className="mx-2 text-slate-300">|</span>
@@ -277,8 +317,8 @@ export const Orders: React.FC = () => {
       {/* MODAL ZA KREIRANJE NARUDŽBE */}
       {isModalOpen && (
         <div className="animate-overlay fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-md">
-          <div className="animate-panel flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-2xl shadow-slate-950/20">
-            <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
+          <div className="animate-panel flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-2xl shadow-slate-950/20">
+            <div className="flex shrink-0 items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6 sm:py-5">
               <div className="rounded-lg bg-indigo-50 p-2 text-indigo-600 ring-1 ring-inset ring-indigo-100">
                 <ShoppingCart className="h-4 w-4" />
               </div>
@@ -295,7 +335,7 @@ export const Orders: React.FC = () => {
               </div>
             ) : (
               <>
-                <div className="flex-1 space-y-6 overflow-y-auto px-6 py-5">
+                <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
 
                   {formError && (
                     <div className="flex items-start gap-2.5 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-3 text-sm text-rose-700">
@@ -355,8 +395,8 @@ export const Orders: React.FC = () => {
                         <p className="text-sm text-slate-400">Korpa je prazna. Dodajte proizvode iznad.</p>
                       </div>
                     ) : (
-                      <div className="overflow-hidden rounded-xl border border-slate-200/70">
-                        <table className="w-full text-left text-sm">
+                      <div className="overflow-x-auto rounded-xl border border-slate-200/70">
+                        <table className="w-full min-w-[26rem] text-left text-sm">
                           <thead className="bg-slate-50/80">
                             <tr>
                               <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">Proizvod</th>
@@ -391,15 +431,15 @@ export const Orders: React.FC = () => {
                 </div>
 
                 {/* UKUPAN IZNOS I AKCIJE */}
-                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
-                  <div>
+                <div className="flex shrink-0 flex-col gap-4 border-t border-slate-100 bg-slate-50/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                  <div className="flex items-baseline justify-between gap-3 sm:block">
                     <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-slate-400">Ukupan iznos</p>
-                    <p className="mt-0.5 text-xl font-semibold tracking-tight text-slate-900 tabular-nums">
+                    <p className="text-xl font-semibold tracking-tight text-slate-900 tabular-nums sm:mt-0.5">
                       {calculateDraftTotal().toFixed(2)}
                       <span className="ml-1 text-sm font-medium text-slate-400">KM</span>
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
                     <button
                       type="button"
                       onClick={() => setIsModalOpen(false)}

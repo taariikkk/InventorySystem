@@ -142,9 +142,9 @@ export const Products: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Upravljanje proizvodima</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Upravljanje proizvodima</h1>
           <p className="text-sm text-slate-500">Pretražujte katalog, pratite zalihe i uređujte artikle.</p>
         </div>
 
@@ -152,7 +152,7 @@ export const Products: React.FC = () => {
         {isAllowedToEdit && (
           <button
             onClick={openCreateModal}
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600/40 focus-visible:ring-offset-2"
+            className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition-all hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600/40 focus-visible:ring-offset-2 sm:w-auto"
           >
             <Plus className="h-4 w-4" />
             <span>Novi proizvod</span>
@@ -212,7 +212,59 @@ export const Products: React.FC = () => {
             <p className="text-sm font-medium text-slate-500">Nema pronađenih proizvoda.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* MOBILNI PRIKAZ: kartice umjesto tabele (tabela je nečitljiva na telefonu) */}
+          <div className="divide-y divide-slate-100 md:hidden">
+            {products.map((product) => (
+              <div key={product.id} className="space-y-3 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 space-y-1">
+                    <p className="text-sm font-semibold text-slate-900">{product.name}</p>
+                    <p className="line-clamp-2 text-xs text-slate-400">{product.description}</p>
+                  </div>
+                  <span className="shrink-0 rounded-md bg-slate-50 px-2 py-1 font-mono text-[11px] font-medium text-slate-600 ring-1 ring-inset ring-slate-200/70">
+                    {product.sku}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-semibold text-slate-900 tabular-nums">{Number(product.price).toFixed(2)} KM</span>
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${
+                      product.stockQuantity > 5
+                        ? 'bg-emerald-50 text-emerald-700 ring-emerald-100'
+                        : 'bg-amber-50 text-amber-700 ring-amber-100'
+                    }`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${product.stockQuantity > 5 ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                      {product.stockQuantity} kom
+                    </span>
+                  </div>
+
+                  {isAllowedToEdit && (
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => openEditModal(product)}
+                        className="inline-flex rounded-lg p-2 text-slate-400 transition-colors hover:bg-indigo-50 hover:text-indigo-600"
+                        title="Uredi"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        className="inline-flex rounded-lg p-2 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                        title="Obriši"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* DESKTOP / TABLET PRIKAZ: klasična tabela */}
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/80">
@@ -271,10 +323,11 @@ export const Products: React.FC = () => {
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         {/* PAGINACIJA (Prethodna / Sljedeća) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/60 px-4 py-4 sm:px-6">
           <span className="text-xs text-slate-500">
             Ukupno <strong className="font-semibold text-slate-800">{totalCount}</strong> proizvoda
             <span className="mx-2 text-slate-300">|</span>
@@ -302,8 +355,8 @@ export const Products: React.FC = () => {
       {/* MODAL ZA KREIRANJE / UREĐIVANJE PROIZVODA */}
       {isModalOpen && (
         <div className="animate-overlay fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-md">
-          <div className="animate-panel w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-2xl shadow-slate-950/20">
-            <div className="border-b border-slate-100 px-6 py-5">
+          <div className="animate-panel flex max-h-[calc(100dvh-2rem)] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-2xl shadow-slate-950/20">
+            <div className="shrink-0 border-b border-slate-100 px-5 py-4 sm:px-6 sm:py-5">
               <h2 className="text-[17px] font-semibold tracking-tight text-slate-900">
                 {selectedProduct ? 'Uredi proizvod' : 'Novi proizvod'}
               </h2>
@@ -312,8 +365,8 @@ export const Products: React.FC = () => {
               </p>
             </div>
 
-            <form onSubmit={handleSaveProduct}>
-              <div className="space-y-4 px-6 py-5">
+            <form onSubmit={handleSaveProduct} className="flex min-h-0 flex-1 flex-col">
+              <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
                 {formError && (
                   <div className="flex items-start gap-2.5 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-3 text-sm text-rose-700">
                     <AlertCircle className="mt-px h-4 w-4 shrink-0" />
@@ -379,7 +432,7 @@ export const Products: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
+              <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}

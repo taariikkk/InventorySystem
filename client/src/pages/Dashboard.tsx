@@ -54,7 +54,7 @@ export const Dashboard: React.FC = () => {
 
       {/* NASLOV STRANICE */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Dashboard</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Dashboard</h1>
         <p className="text-sm text-slate-500">Pregled poslovanja, prihoda i najprodavanijih artikala.</p>
       </div>
 
@@ -62,7 +62,7 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
         {/* Kartica: Ukupno proizvoda */}
-        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm shadow-slate-900/[0.03] transition-all hover:border-slate-300/70 hover:shadow-md">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-900/[0.03] transition-all hover:border-slate-300/70 hover:shadow-md sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2.5">
               <p className="text-[13px] font-medium text-slate-500">Ukupno proizvoda</p>
@@ -76,7 +76,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Kartica: Ukupno narudžbi */}
-        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm shadow-slate-900/[0.03] transition-all hover:border-slate-300/70 hover:shadow-md">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-900/[0.03] transition-all hover:border-slate-300/70 hover:shadow-md sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2.5">
               <p className="text-[13px] font-medium text-slate-500">Ukupno narudžbi</p>
@@ -90,7 +90,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Kartica: Ukupni prihod */}
-        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm shadow-slate-900/[0.03] transition-all hover:border-slate-300/70 hover:shadow-md">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-900/[0.03] transition-all hover:border-slate-300/70 hover:shadow-md sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2.5">
               <p className="text-[13px] font-medium text-slate-500">Ukupni prihod</p>
@@ -113,7 +113,7 @@ export const Dashboard: React.FC = () => {
 
         {/* Lijeva strana: Grafikon prihoda po mjesecima (Recharts) */}
         <div className="rounded-2xl border border-slate-200/70 bg-white shadow-sm shadow-slate-900/[0.03] lg:col-span-2">
-          <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-6 py-5">
+          <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 sm:px-6 sm:py-5">
             <div className="flex items-center gap-3">
               <div className="rounded-lg bg-slate-100 p-2 text-slate-600 ring-1 ring-inset ring-slate-200/60">
                 <BarChart3 className="h-4 w-4" />
@@ -129,7 +129,7 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="h-80 w-full px-3 py-5 pr-6">
+          <div className="h-64 w-full px-1 py-4 pr-3 sm:h-80 sm:px-3 sm:py-5 sm:pr-6">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={summary.monthlyRevenue} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#f1f5f9" />
@@ -157,7 +157,8 @@ export const Dashboard: React.FC = () => {
                   itemStyle={{ color: '#fff', fontWeight: 600 }}
                   formatter={(value) => [`${Number(value).toFixed(2)} KM`, 'Prihod']}
                 />
-                <Bar dataKey="revenue" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={40} />
+                {/* maxBarSize umjesto fiksnog barSize - stubići se skupljaju na manjim ekranima */}
+                <Bar dataKey="revenue" fill="#4f46e5" radius={[4, 4, 0, 0]} maxBarSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -165,7 +166,7 @@ export const Dashboard: React.FC = () => {
 
         {/* Desna strana: Top 5 najprodavanijih proizvoda */}
         <div className="flex flex-col rounded-2xl border border-slate-200/70 bg-white shadow-sm shadow-slate-900/[0.03]">
-          <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
+          <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6 sm:py-5">
             <div className="rounded-lg bg-amber-50 p-2 text-amber-600 ring-1 ring-inset ring-amber-100">
               <Trophy className="h-4 w-4" />
             </div>
@@ -175,7 +176,7 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex-1 divide-y divide-slate-100 px-6">
+          <div className="flex-1 divide-y divide-slate-100 px-5 sm:px-6">
             {summary.topProducts.map((product, idx) => (
               <div key={idx} className="flex items-center justify-between gap-3 py-4">
                 <div className="flex min-w-0 items-center gap-3">
